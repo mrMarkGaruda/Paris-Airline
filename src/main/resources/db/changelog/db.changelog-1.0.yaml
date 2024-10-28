@@ -1,7 +1,7 @@
 databaseChangeLog:
   - changeSet:
       id: 1
-      author: your_name
+      author: "your_name"
       changes:
         - createTable:
             tableName: flights
@@ -40,35 +40,3 @@ databaseChangeLog:
               - column:
                   name: price
                   type: DECIMAL(10, 2)
-                  constraints:
-                    nullable: false
-        - createTable:
-            tableName: bookings
-            columns:
-              - column:
-                  name: id
-                  type: BIGINT
-                  autoIncrement: true
-                  constraints:
-                    primaryKey: true
-              - column:
-                  name: customer_name
-                  type: VARCHAR(255)
-                  constraints:
-                    nullable: false
-              - column:
-                  name: customer_email
-                  type: VARCHAR(255)
-                  constraints:
-                    nullable: false
-              - column:
-                  name: flight_id
-                  type: BIGINT
-                  constraints:
-                    nullable: false
-        - addForeignKeyConstraint:
-            constraintName: fk_bookings_flights
-            baseTableName: bookings
-            baseColumnNames: flight_id
-            referencedTableName: flights
-            referencedColumnNames: id
