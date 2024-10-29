@@ -3,6 +3,156 @@ databaseChangeLog:
       id: 1
       author: "your_name"
       changes:
+        # Create Users table (base table for Client and Employee)
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: firstname
+                  type: VARCHAR(50)
+              - column:
+                  name: lastname
+                  type: VARCHAR(50)
+              - column:
+                  name: address
+                  type: VARCHAR(255)
+              - column:
+                  name: email
+                  type: VARCHAR(100)
+              - column:
+                  name: phone
+                  type: VARCHAR(20)
+              - column:
+                  name: birthdate
+                  type: DATE
+              - column:
+                  name: dtype
+                  type: VARCHAR(31) # Discriminator column for Client and Employee
+              - column:
+                  name: passport_number
+                  type: VARCHAR(20) # For Client subclass
+                  constraints:
+                    nullable: true
+              - column:
+                  name: employee_number
+                  type: VARCHAR(20) # For Employee subclass
+                  constraints:
+                    nullable: true
+
+
+  - changeSet:
+      id: 2
+      author: "your_name"
+      changes:
+        # Create Clients table (inherits from Users)
+        - createTable:
+            tableName: clients
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+                    foreignKeyName: fk_clients_users
+                    references: users(id)
+              - column:
+                  name: passport_number
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 3
+      author: "your_name"
+      changes:
+        # Create Employees table (inherits from Users)
+        - createTable:
+            tableName: employees
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+                    foreignKeyName: fk_employees_users
+                    references: users(id)
+              - column:
+                  name: employee_number
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 4
+      author: "your_name"
+      changes:
+        # Create Planes table
+        - createTable:
+            tableName: planes
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: brand
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: model
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: manufacturing_year
+                  type: INT
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 5
+      author: "your_name"
+      changes:
+        # Create Airports table
+        - createTable:
+            tableName: airports
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: country
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: city
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 6
+      author: "your_name"
+      changes:
+        # Create Flights table
         - createTable:
             tableName: flights
             columns:
@@ -13,18 +163,13 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
               - column:
-                  name: flight_number
+                  name: departure_city
                   type: VARCHAR(50)
                   constraints:
                     nullable: false
               - column:
-                  name: departure_airport
-                  type: VARCHAR(100)
-                  constraints:
-                    nullable: false
-              - column:
-                  name: arrival_airport
-                  type: VARCHAR(100)
+                  name: arrival_city
+                  type: VARCHAR(50)
                   constraints:
                     nullable: false
               - column:
@@ -38,5 +183,57 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: price
-                  type: DECIMAL(10, 2)
+                  name: number_of_seats
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: departure_airport_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_flights_departure_airport
+                    references: airports(id)
+              - column:
+                  name: arrival_airport_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_flights_arrival_airport
+                    references: airports(id)
+              - column:
+                  name: plane_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_flights_planes
+                    references: planes(id)
+
+  - changeSet:
+      id: 7
+      author: "your_name"
+      changes:
+        # Create Bookings table
+        - createTable:
+            tableName: bookings
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: flight_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_bookings_flights
+                    references: flights(id)
+              - column:
+                  name: client_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_bookings_clients
+                    references: clients(id)
