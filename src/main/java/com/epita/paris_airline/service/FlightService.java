@@ -12,6 +12,7 @@ import java.util.Optional;
 
 @Service
 public class FlightService {
+
     @Autowired
     private FlightRepository flightRepository;
 
@@ -54,4 +55,6 @@ public class FlightService {
 
     public List<Flight> searchFlights(String departureCity, String arrivalCity, LocalDate departureDate) {
         return flightRepository.findByDepartureCityAndArrivalCityAndDepartureTimeBetween(
-                departureCity, arrivalCity, departureDate.atStartOfDay(), departure
+                departureCity, arrivalCity, departureDate.atStartOfDay(), departureDate.atTime(LocalTime.MAX));
+    }
+}
