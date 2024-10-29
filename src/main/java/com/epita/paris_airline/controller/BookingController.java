@@ -2,7 +2,6 @@ package com.epita.paris_airline.controller;
 
 import com.epita.paris_airline.model.Booking;
 import com.epita.paris_airline.service.BookingService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,8 +9,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/bookings")
 public class BookingController {
 
-    @Autowired
-    private BookingService bookingService;
+    private final BookingService bookingService;
+
+    public BookingController(BookingService bookingService) {
+        this.bookingService = bookingService;
+    }
 
     @PostMapping
     public Booking bookFlight(@RequestParam Long clientId, @RequestParam Long flightId) {

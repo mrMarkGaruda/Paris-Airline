@@ -2,7 +2,7 @@ package com.epita.paris_airline.controller;
 
 import com.epita.paris_airline.model.Plane;
 import com.epita.paris_airline.service.PlaneService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,8 +12,11 @@ import java.util.List;
 @RequestMapping("/api/planes")
 public class PlaneController {
 
-    @Autowired
-    private PlaneService planeService;
+    private final PlaneService planeService;
+
+    public PlaneController(PlaneService planeService) {
+        this.planeService = planeService;
+    }
 
     @GetMapping
     public List<Plane> getAllPlanes() {
@@ -21,9 +24,11 @@ public class PlaneController {
     }
 
     @PostMapping
-    public Plane createPlane(@RequestBody Plane plane) {
-        return planeService.savePlane(plane);
+    public ResponseEntity<Plane> createPlane(@RequestBody Plane plane) {
+        Plane savedPlane = planeService.savePlane(plane);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedPlane);
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<Plane> getPlaneById(@PathVariable Long id) {

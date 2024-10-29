@@ -6,20 +6,22 @@ import com.epita.paris_airline.model.Flight;
 import com.epita.paris_airline.repository.BookingRepository;
 import com.epita.paris_airline.repository.ClientRepository;
 import com.epita.paris_airline.repository.FlightRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class BookingService {
 
-    @Autowired
-    private BookingRepository bookingRepository;
+    private final BookingRepository bookingRepository;
 
-    @Autowired
-    private ClientRepository clientRepository;
+    private final ClientRepository clientRepository;
 
-    @Autowired
-    private FlightRepository flightRepository;
+    private final FlightRepository flightRepository;
+
+    public BookingService(BookingRepository bookingRepository, ClientRepository clientRepository, FlightRepository flightRepository) {
+        this.bookingRepository = bookingRepository;
+        this.clientRepository = clientRepository;
+        this.flightRepository = flightRepository;
+    }
 
     public Booking bookFlight(Long clientId, Long flightId) {
         Client client = clientRepository.findById(clientId).orElseThrow();
